@@ -48,15 +48,15 @@ export function GameCard({ item, onSwipe, disabled }: GameCardProps) {
       className="absolute w-full"
     >
       <Card className="overflow-hidden shadow-xl">
+        <div className="p-4 text-center bg-muted/10">
+          <h3 className="text-xl font-semibold">{item.name}</h3>
+        </div>
         <div className="relative aspect-[4/3]">
           <img
             src={item.imageUrl}
             alt={item.name}
             className="w-full h-full object-cover"
           />
-        </div>
-        <div className="p-4 text-center">
-          <h3 className="text-xl font-semibold">{item.name}</h3>
         </div>
       </Card>
     </motion.div>

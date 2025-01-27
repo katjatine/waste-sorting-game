@@ -6,14 +6,17 @@ import { useEffect } from "react";
 interface GameCardProps {
   item: WasteItem;
   onSwipe: (direction: "left" | "right") => void;
+  disabled?: boolean;
 }
 
-export function GameCard({ item, onSwipe }: GameCardProps) {
+export function GameCard({ item, onSwipe, disabled }: GameCardProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-30, 30]);
   const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
 
   useEffect(() => {
+    if (disabled) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowLeft") {
         onSwipe("left");
@@ -24,9 +27,11 @@ export function GameCard({ item, onSwipe }: GameCardProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onSwipe]);
+  }, [onSwipe, disabled]);
 
   const handleDragEnd = (event: any, info: any) => {
+    if (disabled) return;
+
     if (info.offset.x > 100) {
       onSwipe("right");
     } else if (info.offset.x < -100) {
@@ -37,7 +42,7 @@ export function GameCard({ item, onSwipe }: GameCardProps) {
   return (
     <motion.div
       style={{ x, rotate, opacity }}
-      drag="x"
+      drag={disabled ? false : "x"}
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={handleDragEnd}
       className="absolute w-full"

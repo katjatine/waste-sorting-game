@@ -23,6 +23,7 @@ export function GameContainer() {
   const [items, setItems] = useState<WasteItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [showingExplanation, setShowingExplanation] = useState(false);
   const { toast } = useToast();
 
   const startGame = () => {
@@ -44,15 +45,24 @@ export function GameContainer() {
         description: "Goed gedaan!",
         className: "bg-green-500 text-white",
       });
+      setCurrentIndex(prev => prev + 1);
     } else {
+      setShowingExplanation(true);
       toast({
         variant: "destructive",
         title: "Incorrect",
         description: currentItem.explanation,
+        duration: Infinity,
       });
     }
+  };
 
+  const handleContinue = () => {
+    setShowingExplanation(false);
     setCurrentIndex(prev => prev + 1);
+    toast({
+      duration: 0
+    });
   };
 
   if (!gameStarted) {
@@ -94,11 +104,26 @@ export function GameContainer() {
       <div className="relative h-[400px] mt-8">
         <AnimatePresence>
           {currentIndex < items.length ? (
-            <GameCard
-              key={items[currentIndex].id}
-              item={items[currentIndex]}
-              onSwipe={handleSwipe}
-            />
+            <>
+              <GameCard
+                key={items[currentIndex].id}
+                item={items[currentIndex]}
+                onSwipe={handleSwipe}
+                disabled={showingExplanation}
+              />
+              {showingExplanation && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute bottom-0 left-0 right-0 p-4 bg-destructive text-destructive-foreground rounded-lg shadow-lg"
+                >
+                  <p className="mb-4">{items[currentIndex].explanation}</p>
+                  <Button onClick={handleContinue} className="w-full">
+                    Volgende Vraag
+                  </Button>
+                </motion.div>
+              )}
+            </>
           ) : (
             <motion.div
               initial={{ opacity: 0, y: 20 }}

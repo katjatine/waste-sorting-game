@@ -48,21 +48,12 @@ export function GameContainer() {
       setCurrentIndex(prev => prev + 1);
     } else {
       setShowingExplanation(true);
-      toast({
-        variant: "destructive",
-        title: "Incorrect",
-        description: currentItem.explanation,
-        duration: Infinity,
-      });
     }
   };
 
   const handleContinue = () => {
     setShowingExplanation(false);
     setCurrentIndex(prev => prev + 1);
-    toast({
-      duration: 0
-    });
   };
 
   if (!gameStarted) {

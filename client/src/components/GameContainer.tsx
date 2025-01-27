@@ -4,7 +4,13 @@ import { ScoreDisplay } from "./ScoreDisplay";
 import { getRandomWasteItems, type WasteItem, type GameSettings } from "@/lib/wasteItems";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
-import { Select } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
 export function GameContainer() {
@@ -54,15 +60,20 @@ export function GameContainer() {
       <div className="w-full max-w-md mx-auto px-4 space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium">Moeilijkheidsgraad:</label>
-          <Select 
+          <Select
             value={settings.difficulty}
-            onValueChange={(value) => 
-              setSettings(prev => ({ ...prev, difficulty: value as GameSettings['difficulty'] }))
+            onValueChange={(value: GameSettings['difficulty']) =>
+              setSettings(prev => ({ ...prev, difficulty: value }))
             }
           >
-            <option value="easy">Gemakkelijk</option>
-            <option value="medium">Gemiddeld</option>
-            <option value="hard">Moeilijk</option>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Kies moeilijkheidsgraad" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="easy">Gemakkelijk</SelectItem>
+              <SelectItem value="medium">Gemiddeld</SelectItem>
+              <SelectItem value="hard">Moeilijk</SelectItem>
+            </SelectContent>
           </Select>
         </div>
 

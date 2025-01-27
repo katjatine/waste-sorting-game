@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import type { WasteItem } from "@/lib/wasteItems";
+import { useEffect } from "react";
 
 interface GameCardProps {
   item: WasteItem;
@@ -11,6 +12,19 @@ export function GameCard({ item, onSwipe }: GameCardProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-30, 30]);
   const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        onSwipe("left");
+      } else if (event.key === "ArrowRight") {
+        onSwipe("right");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onSwipe]);
 
   const handleDragEnd = (event: any, info: any) => {
     if (info.offset.x > 100) {
